@@ -1,0 +1,679 @@
+!pip install geopy speechrecognition
+from geopy.geocoders import Nominatim
+
+geolocator = Nominatim(user_agent="colab_test_app")
+location = geolocator.geocode("Eiffel Tower")
+print(f"Address: {location.address}")
+print(f"Coordinates: Latitude {location.latitude}, Longitude {location.longitude}")
+from google.colab import files
+
+uploaded = files.upload()
+from google.colab import files
+uploaded = files.upload()
+print(uploaded)
+# Import necessary libraries
+import speech_recognition as sr
+from google.colab import files
+import os
+
+# Step 1: Upload the audio file
+print("Please upload a .wav audio file.")
+uploaded = files.upload()
+
+# Verify the uploaded file
+if not uploaded:
+    print("No file uploaded. Please try again.")
+else:
+    # Get the uploaded file name
+    audio_file = list(uploaded.keys())[0]
+    print(f"Uploaded file: {audio_file}")
+
+    # Check if the file exists
+    if not os.path.exists(audio_file):
+        print(f"File {audio_file} not found after upload. Please retry.")
+    else:
+        # Step 2: Initialize speech recognition
+        recognizer = sr.Recognizer()
+
+        try:
+            # Step 3: Open and process the audio file
+            with sr.AudioFile(audio_file) as source:
+                print("Processing audio file...")
+                recognizer.adjust_for_ambient_noise(source)  # Adjust for noise
+                audio_data = recognizer.record(source)       # Record the audio
+
+            # Step 4: Recognize speech
+            print("Recognizing speech...")
+            recognized_text = recognizer.recognize_google(audio_data)
+            print(f"Recognized Command: {recognized_text}")
+
+            # Step 5: Check for the emergency command
+            if "help help help" in recognized_text.lower():
+                print("Emergency Command Detected!")
+            else:
+                print("No emergency command detected.")
+
+        except sr.UnknownValueError:
+            print("Could not understand the audio. Please provide clearer audio.")
+        except sr.RequestError as e:
+            print(f"Speech Recognition service error: {e}")
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
+from geopy.geocoders import Nominatim
+
+# Function to send emergency alert
+def send_emergency_alert():
+    geolocator = Nominatim(user_agent="colab_safety_device")
+    # Simulating the location by providing a query
+    location = geolocator.geocode("New York, USA")  # Replace with your location simulation
+    if location:
+        print(f"Emergency Alert Sent!\nLocation: {location.address}")
+    else:
+        print("Failed to detect location.")
+
+# Replace 'command' with the recognized text from speech recognition
+command = "help help help"  # Simulate recognized command text
+
+# Check for emergency command and send alert
+if "help help help" in command.lower():
+    print("Emergency Command Detected!")
+    send_emergency_alert()
+else:
+    print("No action needed.")
+!sudo apt-get install gpsd gpsd-clients python3-gps
+!sudo apt-get install gpsd gpsd-clients python3-gps
+!sudo systemctl start gpsd.socket
+!sudo systemctl enable gpsd.socket
+!sudo cgps -s
+!pip install geocoder
+
+import geocoder
+
+def get_location():
+    """Retrieves approximate location using IP-based geolocation."""
+    g = geocoder.ip('me')
+    if g.ok:
+        lat, lng = g.latlng
+        print(f"Approximate Location: Latitude={lat}, Longitude={lng}")
+    else:
+        print("Failed to get location.")
+
+get_location()
+!pip install twilio
+!pip install twilio
+
+from twilio.rest import Client
+
+def send_emergency_alert(location, contacts):
+    """Sends emergency alerts to specified contacts."""
+    account_sid = 'AC9be8ea651078164b7a547c94df319c3b'  # Replace with your Account SID
+    auth_token = '79895e0e72041f1c573064d555404a09'  # Replace with your Auth Token
+    client = Client(account_sid, auth_token)
+
+    for contact in contacts:
+        try:
+            message = client.messages.create(
+                body=f"Emergency Alert! Location: {location}",
+                from_='+12183092954',  # Replace with your Twilio phone number
+                to=contact
+            )
+            print(f"SMS sent to {message.to}")
+        except Exception as e:
+            print(f"Error sending SMS to {contact}: {e}")
+
+
+# Define emergency contacts
+emergency_contacts = [
+    '+919123144609',  # Replace with actual contact numbers
+    '+917204021784',
+    # Add more contacts as needed
+]
+
+# Call the function when emergency is detected
+send_emergency_alert("123 Main St, City", emergency_contacts)  # Provide a simulated location
+!pip install twilio geocoder
+
+from twilio.rest import Client
+import geocoder
+import time
+
+def get_location():
+    """Retrieves current location using IP-based geolocation."""
+    g = geocoder.ip('me')
+    if g.ok:
+        lat, lng = g.latlng
+        location_string = f"Latitude={lat}, Longitude={lng}"
+        return location_string
+    else:
+        return "Location not found"
+
+def send_emergency_alert(location, contacts):
+    """Sends emergency alerts to specified contacts."""
+    account_sid = 'AC9be8ea651078164b7a547c94df319c3b'  # Replace with your Account SID
+    auth_token = '79895e0e72041f1c573064d555404a09'  # Replace with your Auth Token
+    client = Client(account_sid, auth_token)
+
+    for contact in contacts:
+        try:
+            message = client.messages.create(
+                body=f"Emergency Alert! Current Location: {location}",
+                from_='+12183092954',  # Your Twilio phone number
+                to=contact
+            )
+            print(f"SMS sent to {message.to}")
+        except Exception as e:
+            print(f"Error sending SMS to {contact}: {e}")
+
+# Define emergency contacts
+emergency_contacts = [
+    '+919123144609',  # Replace with actual contact numbers
+    '+11234567890',
+    # Add more contacts as needed
+]
+
+# Update interval in seconds (e.g., 60 seconds)
+update_interval = 60
+
+while True:  # Continuously update and send location
+    current_location = get_location()
+    send_emergency_alert(current_location, emergency_contacts)
+    time.sleep(update_interval)  # Wait for the specified interval
+!pip install matplotlib-venn
+!pip install twilio geocoder reverse_geocoder
+
+from twilio.rest import Client
+import geocoder
+import reverse_geocoder as rg
+import time
+import random  # For simulating battery drain
+
+# ... (get_location and send_emergency_alert functions from previous responses) ...
+
+# Global variables for battery and power management
+battery_level = 100  # Initial battery level (percentage)
+battery_drain_rate = 0.5  # Battery drain per location update (percentage)
+update_interval = 60  # Default update interval (seconds)
+low_battery_threshold = 20  # Battery level below which power saving is activated (percentage)
+power_saving_update_interval = 120  # Update interval in power saving mode (seconds)
+
+def check_battery_level():
+    """Simulates checking battery level and draining battery."""
+    global battery_level
+    battery_level -= battery_drain_rate  # Simulate battery drain
+    battery_level = max(0, battery_level)  # Ensure battery level doesn't go below 0
+    print(f"Battery level: {battery_level}%")
+    return battery_level
+
+def adjust_update_interval(battery_level):
+    """Adjusts update interval based on battery level."""
+    global update_interval
+    if battery_level <= low_battery_threshold:
+        update_interval = power_saving_update_interval
+        print("Entering power saving mode. Update interval increased.")
+    else:
+        update_interval = 60  # Use default interval
+        print("Exiting power saving mode. Update interval reset.")
+
+def panic_button():
+    """Simulates a panic button with yes/no options."""
+    # ... (panic_button function from previous response) ...
+
+# Define emergency contacts
+emergency_contacts = [
+    '+919123144609',  # Replace with actual contact numbers
+  '+917204021784',
+    # Add more contacts as needed
+]
+
+# Main loop
+while True:
+    # Check battery level
+    battery_level = check_battery_level()
+
+    # Adjust update interval based on battery level
+    adjust_update_interval(battery_level)
+
+    # Panic button functionality (with emergency alert if triggered)
+    panic_button()  # Removed break to stay in the main loop after button press
+
+    # Sleep for the adjusted interval
+    print(f"Sleeping for {update_interval} seconds...")
+    time.sleep(update_interval)
+!pip install twilio geocoder reverse_geocoder opencv-python
+
+from twilio.rest import Client
+import geocoder
+import reverse_geocoder as rg
+import cv2
+import time
+import random
+
+# ... (get_location, send_emergency_alert, check_battery_level, adjust_update_interval functions) ...
+
+def capture_and_send_video_frame(contacts):
+    """Captures a video frame and sends it as an MMS message."""
+    camera = cv2.VideoCapture(0)  # Use default camera (index 0)
+    ret, frame = camera.read()
+    if ret:
+        # Save the frame as an image file
+        image_path = "emergency_frame.jpg"
+        cv2.imwrite(image_path, frame)
+
+        # Send MMS message with the image
+        account_sid = 'AC9be8ea651078164b7a547c94df319c3b'  # Replace with your Account SID
+        auth_token = '79895e0e72041f1c573064d555404a09'  # Replace with your Auth Token
+        client = Client(account_sid, auth_token)
+
+        for contact in contacts:
+            try:
+                message = client.messages.create(
+                    body="Emergency Alert! Video Frame:",
+                    from_='+12183092954',  # Your Twilio phone number
+                    to=contact,
+                    media_url=[f'file://{image_path}']  # Path to the saved image
+                )
+                print(f"MMS sent to {message.to}")
+            except Exception as e:
+                print(f"Error sending MMS to {contact}: {e}")
+
+    camera.release()
+
+# ... (panic_button function) ...
+
+# Define emergency contacts
+emergency_contacts = [
+    '+919123144609',  # Replace with actual contact numbers
+    '+917204021784',
+    # Add more contacts as needed
+]
+
+# Main loop
+while True:
+    # ... (battery check and update interval adjustment) ...
+
+    # Panic button functionality (with video frame capture)
+    if panic_button():  # Call panic_button() and check if it returns True
+        current_location = get_location()
+        send_emergency_alert(current_location, emergency_contacts)
+        capture_and_send_video_frame(emergency_contacts)  # Capture and send video frame
+
+    # ... (sleep for adjusted interval) ...
+!pip install flask flask-socketio opencv-python
+!pip install twilio geocoder reverse_geocoder opencv-python
+
+from twilio.rest import Client
+import geocoder
+import reverse_geocoder as rg
+import cv2
+import time
+import random
+
+# ... (Your existing get_location, send_emergency_alert functions) ...
+
+def capture_and_send_video_frame(contacts):
+    """Captures a video frame and sends it as an MMS message."""
+    camera = cv2.VideoCapture(0)  # Use default camera (index 0)
+    ret, frame = camera.read()
+    if ret:
+        # Save the frame as an image file
+        image_path = "emergency_frame.jpg"
+        cv2.imwrite(image_path, frame)
+
+        # Send MMS message with the image
+        account_sid = 'AC9be8ea651078164b7a547c94df319c3b'  # Replace with your Account SID
+        auth_token = '79895e0e72041f1c573064d555404a09'  # Replace with your Auth Token
+        client = Client(account_sid, auth_token)
+
+        for contact in contacts:
+            try:
+                message = client.messages.create(
+                    body="Emergency Alert! Video Frame:",
+                    from_='+12183092954',  # Your Twilio phone number
+                    to=contact,
+                    media_url=[f'file://{image_path}']  # Path to the saved image
+                )
+                print(f"MMS sent to {message.to}")
+            except Exception as e:
+                print(f"Error sending MMS to {contact}: {e}")
+
+    camera.release()
+
+
+def panic_button():
+    """Simulates a panic button with yes/no options."""
+    while True:
+        user_input = input("Do you want to trigger the emergency alert? (yes/no): ")
+        if user_input.lower() == "yes":
+            print("Panic button activated!")
+            current_location = get_location()
+            send_emergency_alert(current_location, emergency_contacts)
+            capture_and_send_video_frame(emergency_contacts)  # Capture and send video frame
+            break  # Exit the loop after triggering the alert
+        elif user_input.lower() == "no":
+            print("Emergency alert canceled.")
+            break  # Exit the loop without triggering the alert
+        else:
+            print("Invalid input. Please enter 'yes' or 'no'.")
+
+
+# Define emergency contacts
+emergency_contacts = [
+    '+919123144609',  # Replace with actual contact numbers
+    '+11234567890',
+    # Add more contacts as needed
+]
+
+panic_button()  # Call the panic_button function to start
+!pip install twilio geocoder reverse_geocoder opencv-python mediapipe
+
+from twilio.rest import Client
+import geocoder
+import reverse_geocoder as rg
+import cv2
+import time
+import random
+import mediapipe as mp
+
+# ... (Your existing get_location, send_emergency_alert, capture_and_send_video_frame functions) ...
+
+# Initialize hand detection
+mp_hands = mp.solutions.hands.Hands()
+
+def detect_hand_gesture(frame):
+    """Detects hand gestures in a video frame."""
+    results = mp_hands.process(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+    if results.multi_hand_landmarks:
+        # Hand detected!
+        # You can add more specific gesture detection logic here
+        # (e.g., check for a particular finger configuration)
+        return True
+    return False
+
+def monitor_camera():
+    """Continuously monitors the camera and triggers emergency alert on hand detection."""
+    camera = cv2.VideoCapture(0)
+    while True:
+        ret, frame = camera.read()
+        if ret:
+            if detect_hand_gesture(frame):
+                print("Hand gesture detected! Triggering emergency alert...")
+                current_location = get_location()
+                send_emergency_alert(current_location, emergency_contacts)
+                capture_and_send_video_frame(emergency_contacts)
+                break  # Exit the loop after triggering the alert
+            cv2.imshow("Camera Feed", frame)
+            if cv2.waitKey(1) & 0xFF == ord('q'):  # Press 'q' to exit
+                break
+        else:
+            print("Error accessing camera.")
+            break
+    camera.release()
+    cv2.destroyAllWindows()
+
+# Define emergency contacts
+emergency_contacts = [
+    '+919123144609',  # Replace with actual contact numbers
+    '+11234567890',
+    # Add more contacts as needed
+]
+# Start camera monitoring
+monitor_camera()
+!pip install twilio geocoder reverse_geocoder opencv-python mediapipe
+
+# ... (your existing imports and functions) ...
+
+def monitor_camera():
+    """Continuously monitors the camera and triggers emergency alert on hand detection."""
+    # Find available camera indices
+    available_cameras = []
+    for index in range(10):  # Check camera indices 0 to 9
+        cap = cv2.VideoCapture(index)
+        if cap.isOpened():
+            available_cameras.append(index)
+            cap.release()
+
+    if not available_cameras:
+        print("No cameras found.")
+        return
+
+    # Use the first available camera
+    camera_index = available_cameras[0]
+    camera = cv2.VideoCapture(camera_index)
+
+    if not camera.isOpened():
+        print(f"Error: Could not open camera with index {camera_index}")
+        return
+
+    # Display Camera Feed for Testing:
+    while True:
+        ret, frame = camera.read()
+        if not ret:
+            print("Error reading frame from camera.")
+            break
+
+        cv2.imshow('Camera Feed', frame)
+
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    camera.release()
+    cv2.destroyAllWindows()
+!pip install twilio geocoder reverse_geocoder opencv-python mediapipe
+
+from twilio.rest import Client
+import geocoder
+import reverse_geocoder as rg
+import cv2
+import time
+import random
+import mediapipe as mp
+
+# Your Account SID and Auth Token from twilio.com/console
+# Set environment variables or replace placeholders
+account_sid = 'AC9be8ea651078164b7a547c94df319c3b'  # Replace with your Account SID
+auth_token = '79895e0e72041f1c573064d555404a09'  # Replace with your Auth Token
+client = Client(account_sid, auth_token)
+
+
+def get_location():
+    """Retrieves current location using IP-based geolocation."""
+    g = geocoder.ip('me')
+    if g.ok:
+        lat, lng = g.latlng
+        location_string = f"Latitude={lat}, Longitude={lng}"
+        return location_string
+    else:
+        return "Location not found"
+
+
+def send_emergency_alert(location, contacts):
+    """Sends emergency alerts to specified contacts."""
+    for contact in contacts:
+        try:
+            message = client.messages.create(
+                body=f"Emergency Alert! Current Location: {location}",
+                from_='+12183092954',  # Your Twilio phone number
+                to=contact
+            )
+            print(f"SMS sent to {message.to}")
+        except Exception as e:
+            print(f"Error sending SMS to {contact}: {e}")
+
+
+def capture_and_send_video_frame(contacts):
+    """Captures a video frame and sends it as an MMS message."""
+    # Find available camera indices
+    available_cameras = []
+    for index in range(10):  # Check camera indices 0 to 9
+        cap = cv2.VideoCapture(index)
+        if cap.isOpened():
+            available_cameras.append(index)
+            cap.release()
+
+    if not available_cameras:
+        print("No cameras found.")
+        return
+# Use the first available camera
+    camera_index = available_cameras[0]
+    camera = cv2.VideoCapture(camera_index)
+
+    if not camera.isOpened():
+        print(f"Error: Could not open camera with index {camera_index}")
+        return
+
+    ret, frame = camera.read()
+    if ret:
+        # Save the frame as an image file
+        image_path = "emergency_frame.jpg"
+        cv2.imwrite(image_path, frame)
+
+        # Send MMS message with the image
+        for contact in contacts:
+            try:
+                message = client.messages.create(
+                    body="Emergency Alert! Video Frame:",
+                    from_='+12183092954',  # Your Twilio phone number
+                    to=contact,
+                    media_url=[f'file://{image_path}']  # Path to the saved image
+                )
+                print(f"MMS sent to {message.to}")
+            except Exception as e:
+                print(f"Error sending MMS to {contact}: {e}")
+
+    camera.release()
+
+
+def panic_button():
+    """Simulates a panic button with yes/no options."""
+    while True:
+        user_input = input("Do you want to trigger the emergency alert? (yes/no): ")
+        if user_input.lower() == "yes":
+            print("Panic button activated!")
+            current_location = get_location()
+            send_emergency_alert(current_location, emergency_contacts)
+            capture_and_send_video_frame(emergency_contacts)
+            break  # Exit the loop after triggering the alert
+        elif user_input.lower() == "no":
+            print("Emergency alert canceled.")
+            break  # Exit the loop without triggering the alert
+        else:
+            print("Invalid input. Please")
+!pip install aiortc aiohttp
+!pip install aiortc aiohttp
+import asyncio
+import json
+import logging
+from aiohttp import web
+from aiortc import RTCIceCandidate, RTCPeerConnection, RTCSessionDescription
+from aiortc.contrib.media import MediaBlackhole, MediaPlayer, MediaRecorder
+!pip install twilio
+def generate_access_token(identity, room_name):
+    """Generates a Twilio Access Token for video calling."""
+    # Your Account SID and Auth Token from twilio.com/console
+    # Set environment variables or replace placeholders
+    account_sid = 'AC9be8ea651078164b7a547c94df319c3b'  # Replace with your Account SID
+    auth_token = '79895e0e72041f1c573064d555404a09'  # Replace with your Auth Token
+
+    token = AccessToken(account_sid, auth_token, identity)
+
+    # Grant access to Video
+    grant = VideoGrant(room=room_name)  # Specify the room name
+    token.add_grant(grant)
+
+    return token.to_jwt()  # Generate the JWT token string
+from flask import Flask, request
+
+app = Flask(__name__)
+
+@app.route('/twilio-video-status-callback', methods=['POST'])
+def twilio_video_status_callback():
+    # Process the incoming webhook data here (request.form, request.json)
+    # ...
+    return 'OK'  # Return a 200 OK response to Twilio
+
+if __name__ == '__main__':
+    app.run(debug=True)
+!pip install opencv-python face_recognition
+!apt-get update
+!apt-get install -y --no-install-recommends \
+    cuda-11-8 \
+    libnvinfer8 \
+    libnvinfer-dev \
+    libnvinfer-plugin8 \
+    libnvonnxparsers8 \
+    libnvparsers8 \
+    libcublas-11-8 \
+    libcublas-dev-11-8 \
+    libcudnn8 \
+    libcudnn8-dev
+!pip uninstall face_recognition
+import os
+import getpass
+
+# File to store the PIN securely (use encryption for better security in production)
+PIN_FILE = "device_pin.txt"
+
+
+# Function to set a new PIN
+def set_pin():
+    while True:
+        pin = getpass.getpass("Set a 4-digit PIN: ")  # Hides input
+        if len(pin) == 4 and pin.isdigit():
+            confirm_pin = getpass.getpass("Confirm your PIN: ")
+            if pin == confirm_pin:
+                with open(PIN_FILE, "w") as f:
+                    f.write(pin)
+                print("PIN set successfully!")
+                break
+            else:
+                print("PINs do not match. Please try again.")
+        else:
+            print("Invalid PIN. Enter exactly 4 digits.")
+
+
+# Function to validate the PIN
+def validate_pin():
+    if not os.path.exists(PIN_FILE):
+        print("No PIN is set. Please set a PIN first.")
+        return False
+
+    with open(PIN_FILE, "r") as f:
+        stored_pin = f.read().strip()
+
+    attempts = 3
+    while attempts > 0:
+        pin = getpass.getpass("Enter your 4-digit PIN: ")
+        if pin == stored_pin:
+            print("Device unlocked successfully!")
+            return True
+        else:
+            attempts -= 1
+            print(f"Incorrect PIN. {attempts} attempts remaining.")
+
+    print("Too many incorrect attempts. Device locked.")
+    return False
+
+
+# Main program flow
+def main():
+    print("Welcome to the Safety Device!")
+    if not os.path.exists(PIN_FILE):
+        print("No PIN set. Please set a PIN to activate the device.")
+        set_pin()
+
+    print("\nPIN Authentication Required to Access the Device.")
+    if validate_pin():
+        print("Access granted. Device activated!")
+        # Add additional device features here (e.g., emergency alert, video call, etc.)
+    else:
+        print("Access denied. Exiting system.")
+
+
+if __name__ == "__main__":
+    main()
+!pip install adafruit-circuitpython-max30102
+!pip install smbus2
+pip install adafruit-blinka
+!pip install adafruit-blinka
+
+
